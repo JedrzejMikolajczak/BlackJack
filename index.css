@@ -27,3 +27,9 @@ button {
     margin-bottom: 2px;
     margin-top: 2px;
 }
+.croupier-cards{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
