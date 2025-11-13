@@ -3,21 +3,39 @@
         <link rel="stylesheet" href="index.css">
     </head>
     <body>
-        <h1>Blackjack</h1>
-        <p id="message-el">Want to play a round?</p>
-        <p id="cards-el">Cards:</p>
-        <div class="playerCardsDisplayHTML">
-            
-        </div>
-        <p id="sum_player-el">Sum:</p>
-        <div class="croupier-cards">
+        <div class="table-wrapper">
+            <header class="header">
+                <h1>Blackjack</h1>
+                <div id="player-el" class="player-box"></div>
+            </header>
 
+            <main class="table-panel">
+                <section class="dealer-section">
+                    <h3 class="section-title">Croupier</h3>
+                    <div id="croupier-card-el" class="croupier-cards"></div>
+                    <p id="croupier-crd-sum" class="sum-label"></p>
+                </section>
+
+                <div class="center-info">
+                    <div id="message-el" class="message-box">Want to play a round?</div>
+                </div>
+
+                <section class="player-section">
+                    <h3 class="section-title">Player</h3>
+                    <p id="sum_player-el" class="sum-label">Player Sum:</p>
+                    <div class="playerCardsDisplayHTML"></div>
+                </section>
+            </main>
+
+            <footer class="controls">
+                <div class="btn-row">
+                    <button id="btn-reveal-new" onclick="startGame()">START GAME</button>
+                    <button id="btn-stand">STAND</button>
+                    <button id="btn-hit">HIT</button>
+                </div>
+            </footer>
         </div>
-        <p id="croupier-crd-sum"></p>
-        <button id="btn-reveal-new" onclick="startGame()">START GAME</button>
-        <button id="btn-stand">STAND</button>
-        <button id="btn-hit" onclick="newCard()">HIT</button>
-        <p id="player-el"></p>
+
         <script src="index.js"></script>
     </body>
 </html>

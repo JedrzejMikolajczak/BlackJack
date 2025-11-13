@@ -25,12 +25,18 @@ let croupier_sum_cards = document.getElementById("croupier-crd-sum")
 let croupier_cards = document.getElementById("croupier-card-el")
 let playerCardsDisplayHTML = document.querySelector(".playerCardsDisplayHTML")
 let croupierCardsDisplayHTML = document.querySelector(".croupier-cards")
+let finalShove = false
 
 
 let playerEl = document.getElementById("player-el")
 
 
 playerEl.textContent = player.name + ": $"
+
+function clearCardsDisplay() {
+        playerCardsDisplayHTML.innerHTML = ""
+        croupierCardsDisplayHTML.innerHTML = ""
+    }
 
 function drawCardPlayer(cardColor, cardValue){
     let cardImg = document.createElement("img")
@@ -51,14 +57,20 @@ function drawCardCroupier(cardColor, cardValue){
 
 function getRandomCard() {
     let randomColor = colors[Math.floor(Math.random() * colors.length)]
-    let randomNumber = Math.floor(Math.random() * 13) + 2               
+    let randomNumber = Math.floor(Math.random() * 13) + 2     
+    if(randomNumber >=10){
+        randomNumber = 10
+    }          
     let randomNumberString = randomNumber.toString()
     return [randomColor, randomNumberString]
 }
 
 function startGame() {
+    console.log("start")
+    clearCardsDisplay()
     croupier_sum_cards.style.display = "none"
     canDraw = true
+    finalShove = false
     hasBlackJack = false
     isAlive = true
     dealerRevealed = false
@@ -69,12 +81,15 @@ function startGame() {
     let firstCard_croupier = getRandomCard()
     let secondCard_croupier = getRandomCard()
     croupier_cards_array = [firstCard_croupier,secondCard_croupier]
-    sum_player = firstCard + secondCard
-    sum_croupier = firstCard_croupier + secondCard_croupier
+    sum_player = parseInt(cards_player_array[0][1]) + parseInt(cards_player_array[1][1])
+    sum_croupier = parseInt(croupier_cards_array[0][1]) + parseInt(croupier_cards_array[1][1])
     renderGame()
 }
 
+
 function renderGame() {
+    
+    clearCardsDisplay()
     if (isAlive && !hasBlackJack) {
         btn_stand.style.display = "inline-block"
         btn_hit.style.display = "inline-block"
@@ -83,17 +98,18 @@ function renderGame() {
         btn_hit.style.display = "none"
     }
     if (game_tour >= 1){
-        player_cards.textContent = "Player cards: "
         for (let i = 0; i < cards_player_array.length; i++) {
             drawCardPlayer(cards_player_array[i][0], cards_player_array[i][1])
-        }   
+        }  
+        if(finalShove === true){
+            for (let i = 0; i < croupier_cards_array.length; i++) {
+            drawCardCroupier(croupier_cards_array[i][0], croupier_cards_array[i][1])
+        }  
+        } 
         if (!dealerRevealed) {
             drawCardCroupier(croupier_cards_array[0][0], croupier_cards_array[0][1])
-            drawCardCroupier("back_","light ")
-        } else {
-            croupier_cards.textContent = "Croupier cards: " + croupier_cards_array.join(" ")
-            hidden_cart.textContent = ""
-        }
+            drawCardCroupier("back_","light")
+        } 
     }
     
 
@@ -117,9 +133,9 @@ function renderGame() {
 function newCard() {
     if (isAlive === true && hasBlackJack === false) {
         let card = getRandomCard()
-        sum_player += card
         cards_player_array.push(card)
-        renderGame()        
+        sum_player += parseInt(cards_player_array[cards_player_array.length-1][1])
+        renderGame()
     }
 }
 
@@ -128,13 +144,13 @@ function stand(){
         dealerRevealed = true
         while (sum_croupier <= 17){
             let card = getRandomCard()
-            sum_croupier += card
-            croupier_cards.textContent += card
             croupier_cards_array.push(card)
+            console.log(card)
+            sum_croupier += parseInt(croupier_cards_array[croupier_cards_array.length-1][1])
+            finalShove = true
         }
         croupier_sum_cards.style.display = "block"
         croupier_sum_cards.textContent = "Croupier sum: " + sum_croupier
-        renderGame()
         if(sum_croupier <= 21 && sum_player <= 21){
             if (sum_croupier === sum_player){
                 message = "Push is better than a shove"
@@ -147,6 +163,11 @@ function stand(){
             else if(sum_croupier === 21 && croupier_cards_array.length === 2){
                 message = "Croupier got a blackjack!"
                 isAlive = false
+            }
+            else if(sum_croupier > 21 && sum_player <=21){
+                isAlive = false
+                message = "You won!"
+                console.log("KRUPIER PRZEKROCZYL")
             }
             else{
                 message = "You won!"
