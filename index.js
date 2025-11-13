@@ -13,6 +13,7 @@ let hidden_cart = document.getElementById("not-revealed-card")
 let hasBlackJack = false
 let isAlive = false
 let message = ""
+let colors = ["clubs_", "diamonds_","hearts_","spades_"]
 let cards_player_array = []
 let croupier_cards_array = []
 let sum_croupier = 0
@@ -22,6 +23,8 @@ let player_sum_cards = document.getElementById("sum_player-el")
 let player_cards = document.getElementById("cards-el")
 let croupier_sum_cards = document.getElementById("croupier-crd-sum")
 let croupier_cards = document.getElementById("croupier-card-el")
+let playerCardsDisplayHTML = document.querySelector(".playerCardsDisplayHTML")
+let croupierCardsDisplayHTML = document.querySelector(".croupier-cards")
 
 
 let playerEl = document.getElementById("player-el")
@@ -29,15 +32,28 @@ let playerEl = document.getElementById("player-el")
 
 playerEl.textContent = player.name + ": $"
 
+function drawCardPlayer(cardColor, cardValue){
+    let cardImg = document.createElement("img")
+    cardImg.style.width = "150px"
+    cardImg.style.height = "200px"
+    cardImg.src = `/cards/${cardColor+cardValue}.png`
+    console.log(cardColor+cardValue)
+    playerCardsDisplayHTML.appendChild(cardImg)
+}
+function drawCardCroupier(cardColor, cardValue){
+    let cardImg = document.createElement("img")
+    cardImg.style.width = "150px"
+    cardImg.style.height = "200px"
+    cardImg.src = `/cards/${cardColor+cardValue}.png`
+    console.log(cardColor+cardValue)
+    croupierCardsDisplayHTML.appendChild(cardImg)
+}
+
 function getRandomCard() {
-    let randomNumber = Math.floor( Math.random()*13 ) + 1
-    if (randomNumber > 10) {
-        return 10
-    } else if (randomNumber === 1) {
-        return 11
-    } else {
-        return randomNumber
-    }
+    let randomColor = colors[Math.floor(Math.random() * colors.length)]
+    let randomNumber = Math.floor(Math.random() * 13) + 2               
+    let randomNumberString = randomNumber.toString()
+    return [randomColor, randomNumberString]
 }
 
 function startGame() {
@@ -69,11 +85,11 @@ function renderGame() {
     if (game_tour >= 1){
         player_cards.textContent = "Player cards: "
         for (let i = 0; i < cards_player_array.length; i++) {
-            player_cards.textContent += cards_player_array[i] + " "
+            drawCardPlayer(cards_player_array[i][0], cards_player_array[i][1])
         }   
         if (!dealerRevealed) {
-            croupier_cards.textContent = "Croupier cards: " + croupier_cards_array[0]
-            hidden_cart.textContent = "HC"
+            drawCardCroupier(croupier_cards_array[0][0], croupier_cards_array[0][1])
+            drawCardCroupier("back_","light ")
         } else {
             croupier_cards.textContent = "Croupier cards: " + croupier_cards_array.join(" ")
             hidden_cart.textContent = ""
