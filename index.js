@@ -142,7 +142,7 @@ function newCard() {
 function stand(){
     if (isAlive === true && hasBlackJack === false){
         dealerRevealed = true
-        while (sum_croupier <= 17){
+        while (sum_croupier < 17){
             let card = getRandomCard()
             croupier_cards_array.push(card)
             console.log(card)
